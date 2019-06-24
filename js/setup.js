@@ -1,11 +1,11 @@
 'use strict';
 
-var userName = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-var userSurname = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
+//  var userName = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+//  var userSurname = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var WIZARD_COATCOLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var WIZARD_EYESCOLOR = ['black', 'red', 'blue', 'yellow', 'green'];
 var WIZARD_FIREBALLCOLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
-var LENGTH_WIZARDS_ARR = 4;
+//  var LENGTH_WIZARDS_ARR = 4;
 
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
@@ -30,6 +30,7 @@ var shuffle = function (arr) {
   return arr;
 };
 
+/*
 // Создает массив магов из объектов с данными
 var arrWizards = function (myUserName, myUserSurname, myWizardCoatcolor, myWizardEyescolor, myLengthWizardsArr) {
   var WIZARD_NAMES = [];
@@ -86,6 +87,7 @@ var fillingWizard = function () {
 };
 
 //  fillingWizard();//  Вызов функции заполнения блока DOM-элементами на основе массива JS-объектов
+*/
 
 //  Открытие/закрытие окна настройки персонажа
 var characterWindowSetting = function () {
@@ -146,7 +148,7 @@ var validationName = function () {
   var setup = document.querySelector('.setup');
   var userNameInput = setup.querySelector('.setup-user-name');
 
-  userNameInput.addEventListener('invalid', function (evt) {
+  userNameInput.addEventListener('invalid', function () {
     if (userNameInput.validity.tooShort) {
       userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
     } else if (userNameInput.validity.tooLong) {
