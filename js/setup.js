@@ -1,10 +1,12 @@
 'use strict';
 
-//  var userName = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-//  var userSurname = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 var WIZARD_COATCOLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
 var WIZARD_EYESCOLOR = ['black', 'red', 'blue', 'yellow', 'green'];
 var WIZARD_FIREBALLCOLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+
+//  Данные для предыдущих заданий
+//  var userName = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+//  var userSurname = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
 //  var LENGTH_WIZARDS_ARR = 4;
 
 var ESC_KEYCODE = 27;
@@ -30,6 +32,7 @@ var shuffle = function (arr) {
   return arr;
 };
 
+//  Предыдущие задания
 /*
 // Создает массив магов из объектов с данными
 var arrWizards = function (myUserName, myUserSurname, myWizardCoatcolor, myWizardEyescolor, myLengthWizardsArr) {
@@ -178,16 +181,6 @@ var changeWizardCoat = function () {
 
     wizardCoatInput.value = chosenWizardCoat;
   });
-
-  /* СТАРЫЙ ВАРИАНТ
-  setupWizardCoat.onclick = function (evt) {
-    var shuffleWizardCoat = shuffle(WIZARD_COATCOLOR);
-    var chosenWizardCoat = WIZARD_COATCOLOR[randomSelection(shuffleWizardCoat)];
-    evt.target.style.fill = chosenWizardCoat;
-
-    wizardCoatInput.value = chosenWizardCoat;
-  };
-  */
 };
 
 changeWizardCoat();
@@ -204,16 +197,6 @@ var changeWizardEyes = function () {
 
     wizardEyesInput.value = chosenWizardEyes;
   });
-
-  /* СТАРЫЙ ВАРИАНТ
-  setupWizardEyes.onclick = function (evt) {
-    var shuffleWizardEyes = shuffle(WIZARD_EYESCOLOR);
-    var chosenWizardEyes = WIZARD_EYESCOLOR[randomSelection(shuffleWizardEyes)];
-    evt.target.style.fill = chosenWizardEyes;
-
-    wizardEyesInput.value = chosenWizardEyes;
-  };
-  */
 };
 
 changeWizardEyes();
@@ -230,16 +213,6 @@ var changeFireballWap = function () {
 
     fireballWapInput.value = chosenWizardFireballWap;
   });
-
-  /* СТАРЫЙ ВАРИАНТ
-  setupFireballWap.onclick = function (evt) {
-    var shuffleWizardFireballWap = shuffle(WIZARD_FIREBALLCOLOR);
-    var chosenWizardFireballWap = WIZARD_FIREBALLCOLOR[randomSelection(shuffleWizardFireballWap)];
-    evt.target.style.backgroundColor = chosenWizardFireballWap;
-
-    fireballWapInput.value = chosenWizardFireballWap;
-  };
-  */
 };
 
 changeFireballWap();
