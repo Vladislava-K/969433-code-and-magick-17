@@ -12,6 +12,8 @@ var WIZARD_FIREBALLCOLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
+var setup = document.querySelector('.setup');
+
 // Выбирает случайное значение из массива
 var randomSelection = function (arr) {
   var rands = Math.floor(Math.random() * arr.length);
@@ -94,7 +96,6 @@ var fillingWizard = function () {
 
 //  Открытие/закрытие окна настройки персонажа
 var characterWindowSetting = function () {
-  var setup = document.querySelector('.setup');
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = setup.querySelector('.setup-close');
   var userNameInput = setup.querySelector('.setup-user-name');
@@ -148,7 +149,6 @@ characterWindowSetting();
 
 //  Валидация ввода имени персонажа
 var validationName = function () {
-  var setup = document.querySelector('.setup');
   var userNameInput = setup.querySelector('.setup-user-name');
 
   userNameInput.addEventListener('invalid', function () {
