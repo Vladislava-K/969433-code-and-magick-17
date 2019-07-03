@@ -1,218 +1,134 @@
 'use strict';
+(function () {
+  // Данные для предыдущих заданий
+  var userName = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
+  var userSurname = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
+  var LENGTH_WIZARDS_ARR = 4;
 
-var WIZARD_COATCOLOR = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
-var WIZARD_EYESCOLOR = ['black', 'red', 'blue', 'yellow', 'green'];
-var WIZARD_FIREBALLCOLOR = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+  var setup = document.querySelector('.setup');
 
-//  Данные для предыдущих заданий
-//  var userName = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-//  var userSurname = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
-//  var LENGTH_WIZARDS_ARR = 4;
+  //  Предыдущие задания
+  // Создает массив магов из объектов с данными
+  var arrWizards = function (myUserName, myUserSurname, myWizardCoatcolor, myWizardEyescolor, myLengthWizardsArr) {
+    var WIZARD_NAMES = [];
+    var wizards = [];
 
-var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
+    for (var i = 0; i < myLengthWizardsArr; i++) {
+      var shuffleuserName = window.util.shuffle(userName);
+      var chosenuserName = window.util.randomSelection(shuffleuserName);
 
-var setup = document.querySelector('.setup');
+      var shuffleuserSurname = window.util.shuffle(userSurname);
+      var chosenuserSurname = window.util.randomSelection(shuffleuserSurname);
+      WIZARD_NAMES[i] = userName[chosenuserName] + ' ' + userSurname[chosenuserSurname];
 
-// Выбирает случайное значение из массива
-var randomSelection = function (arr) {
-  var rands = Math.floor(Math.random() * arr.length);
-  return (rands);
-};
+      var shuffleWizardCoatcolor = window.util.shuffle(myWizardCoatcolor);
+      var chosenWizardCoatcolor = myWizardCoatcolor[window.util.randomSelection(shuffleWizardCoatcolor)];
 
-// Перемешивает массив используя тасование Фишера-Йетса
-var shuffle = function (arr) {
-  var j;
-  var temp;
-  for (var i = arr.length - 1; i > 0; i--) {
-    j = Math.floor(Math.random() * (i + 1));
-    temp = arr[j];
-    arr[j] = arr[i];
-    arr[i] = temp;
-  }
+      var shuffleWizardEyescolor = window.util.shuffle(myWizardEyescolor);
+      var chosenWizardEyescolor = myWizardEyescolor[window.util.randomSelection(shuffleWizardEyescolor)];
 
-  return arr;
-};
+      wizards[i] = {name: WIZARD_NAMES[i], coatColor: chosenWizardCoatcolor, eyesColor: chosenWizardEyescolor};
+    }
 
-//  Предыдущие задания
-/*
-// Создает массив магов из объектов с данными
-var arrWizards = function (myUserName, myUserSurname, myWizardCoatcolor, myWizardEyescolor, myLengthWizardsArr) {
-  var WIZARD_NAMES = [];
-  var wizards = [];
+    return (wizards);
+  };
 
-  for (var i = 0; i < myLengthWizardsArr; i++) {
-    var shuffleuserName = shuffle(userName);
-    var chosenuserName = randomSelection(shuffleuserName);
+  //  функция создания DOM-элемента на основе JS-объекта
+  var renderWizard = function (wizard) {
+    var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');//  Итоговую разметку .setup-similar-item берем из шаблона #similar-wizard-template
 
-    var shuffleuserSurname = shuffle(userSurname);
-    var chosenuserSurname = randomSelection(shuffleuserSurname);
-    WIZARD_NAMES[i] = userName[chosenuserName] + ' ' + userSurname[chosenuserSurname];
+    var wizardElement = similarWizardTemplate.cloneNode(true);
 
-    var shuffleWizardCoatcolor = shuffle(myWizardCoatcolor);
-    var chosenWizardCoatcolor = myWizardCoatcolor[randomSelection(shuffleWizardCoatcolor)];
+    wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
+    wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
 
-    var shuffleWizardEyescolor = shuffle(myWizardEyescolor);
-    var chosenWizardEyescolor = myWizardEyescolor[randomSelection(shuffleWizardEyescolor)];
+    return wizardElement;
+  };
 
-    wizards[i] = {name: WIZARD_NAMES[i], coatColor: chosenWizardCoatcolor, eyesColor: chosenWizardEyescolor};
-  }
+  //  функция заполнения блока DOM-элементами на основе массива JS-объектов
+  var fillingWizard = function () {
+    var wizards = arrWizards(userName, userSurname, window.util.WIZARD_COATCOLOR, window.util.WIZARD_EYESCOLOR, LENGTH_WIZARDS_ARR);
 
-  return (wizards);
-};
+    document.querySelector('.setup-similar').classList.remove('hidden');
+    var similarListElement = document.querySelector('.setup-similar-list');//  Аналогичные элементы списка
 
-//  функция создания DOM-элемента на основе JS-объекта
-var renderWizard = function (wizard) {
-  var userDialog = document.querySelector('.setup');
-  userDialog.classList.remove('hidden');
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < wizards.length; i++) {
+      fragment.appendChild(renderWizard(wizards[i]));
+    }
+    similarListElement.appendChild(fragment);
+  };
 
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');//  Итоговую разметку .setup-similar-item берем из шаблона #similar-wizard-template
+  //  Открытие/закрытие окна настройки персонажа
+  fillingWizard();//  Вызов функции заполнения блока DOM-элементами на основе массива JS-объектов
+  var characterWindowSetting = function () {
+    var setupOpen = document.querySelector('.setup-open');
+    var setupClose = setup.querySelector('.setup-close');
+    var userNameInput = setup.querySelector('.setup-user-name');
 
-  var wizardElement = similarWizardTemplate.cloneNode(true);
-
-  wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-  wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
-  wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
-
-  return wizardElement;
-};
-
-//  функция заполнения блока DOM-элементами на основе массива JS-объектов
-var fillingWizard = function () {
-  var wizards = arrWizards(userName, userSurname, WIZARD_COATCOLOR, WIZARD_EYESCOLOR, LENGTH_WIZARDS_ARR);
-
-  document.querySelector('.setup-similar').classList.remove('hidden');
-  var similarListElement = document.querySelector('.setup-similar-list');//  Аналогичные элементы списка
-
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < wizards.length; i++) {
-    fragment.appendChild(renderWizard(wizards[i]));
-  }
-  similarListElement.appendChild(fragment);
-};
-
-//  fillingWizard();//  Вызов функции заполнения блока DOM-элементами на основе массива JS-объектов
-*/
-
-//  Открытие/закрытие окна настройки персонажа
-var characterWindowSetting = function () {
-  var setupOpen = document.querySelector('.setup-open');
-  var setupClose = setup.querySelector('.setup-close');
-  var userNameInput = setup.querySelector('.setup-user-name');
-
-  var onPopupEscPress = function (evt) {
-    if (evt.keyCode === ESC_KEYCODE) {
-      var target = evt.target;
-      if (target === userNameInput) {
-        document.removeEventListener('keydown', onPopupEscPress);
-        openPopup();
-      } else {
-        closePopup();
+    var onPopupEscPress = function (evt) {
+      if (evt.keyCode === window.util.ESC_KEYCODE) {
+        var target = evt.target;
+        if (target === userNameInput) {
+          document.removeEventListener('keydown', onPopupEscPress);
+          openPopup();
+        } else {
+          closePopup();
+        }
       }
-    }
-  };
+    };
 
-  var openPopup = function () {
-    setup.classList.remove('hidden');
+    var openPopup = function () {
+      setup.classList.remove('hidden');
 
-    document.addEventListener('keydown', onPopupEscPress);
-  };
+      document.addEventListener('keydown', onPopupEscPress);
+    };
 
-  var closePopup = function () {
-    setup.classList.add('hidden');
+    var closePopup = function () {
+      setup.classList.add('hidden');
 
-    document.removeEventListener('keydown', onPopupEscPress);
-  };
+      document.removeEventListener('keydown', onPopupEscPress);
+    };
 
-  setupOpen.addEventListener('click', function () {
-    openPopup();
-  });
-
-  setupOpen.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    setupOpen.addEventListener('click', function () {
       openPopup();
-    }
-  });
+    });
 
-  setupClose.addEventListener('click', function () {
-    closePopup();
-  });
+    setupOpen.addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, openPopup);
+    });
 
-  setupClose.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
+    setupClose.addEventListener('click', function () {
       closePopup();
-    }
-  });
-};
+    });
 
-characterWindowSetting();
+    setupClose.addEventListener('keydown', function (evt) {
+      window.util.isEnterEvent(evt, closePopup);
+    });
+  };
 
-//  Валидация ввода имени персонажа
-var validationName = function () {
-  var userNameInput = setup.querySelector('.setup-user-name');
+  characterWindowSetting();
 
-  userNameInput.addEventListener('invalid', function () {
-    if (userNameInput.validity.tooShort) {
-      userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
-    } else if (userNameInput.validity.tooLong) {
-      userNameInput.setCustomValidity('Имя не должно превышать 25-ти символов');
-    } else if (userNameInput.validity.valueMissing) {
-      userNameInput.setCustomValidity('Обязательное поле');
-    } else {
-      userNameInput.setCustomValidity('');
-    }
-  });
+  //  Валидация ввода имени персонажа
+  var validationName = function () {
+    var userNameInput = setup.querySelector('.setup-user-name');
 
-  userNameInput.myvalue = userNameInput.value;
-  userNameInput.value = userNameInput.myvalue;
-};
+    userNameInput.addEventListener('invalid', function () {
+      if (userNameInput.validity.tooShort) {
+        userNameInput.setCustomValidity('Имя должно состоять минимум из 2-х символов');
+      } else if (userNameInput.validity.tooLong) {
+        userNameInput.setCustomValidity('Имя не должно превышать 25-ти символов');
+      } else if (userNameInput.validity.valueMissing) {
+        userNameInput.setCustomValidity('Обязательное поле');
+      } else {
+        userNameInput.setCustomValidity('');
+      }
+    });
 
-validationName();
+    userNameInput.myvalue = userNameInput.value;
+    userNameInput.value = userNameInput.myvalue;
+  };
 
-//  Изменение цвета мантии персонажа по нажатию
-var changeWizardCoat = function () {
-  var setupWizardCoat = document.querySelector('.setup-wizard').querySelector('.wizard-coat');
-  var wizardCoatInput = document.querySelector('.setup-wizard-appearance').querySelectorAll('input')[0];
-
-  setupWizardCoat.addEventListener('click', function (evt) {
-    var shuffleWizardCoat = shuffle(WIZARD_COATCOLOR);
-    var chosenWizardCoat = WIZARD_COATCOLOR[randomSelection(shuffleWizardCoat)];
-    evt.target.style.fill = chosenWizardCoat;
-
-    wizardCoatInput.value = chosenWizardCoat;
-  });
-};
-
-changeWizardCoat();
-
-//  Изменение цвета глаз персонажа по нажатию
-var changeWizardEyes = function () {
-  var setupWizardEyes = document.querySelector('.setup-wizard').querySelector('.wizard-eyes');
-  var wizardEyesInput = document.querySelector('.setup-wizard-appearance').querySelectorAll('input')[1];
-
-  setupWizardEyes.addEventListener('click', function (evt) {
-    var shuffleWizardEyes = shuffle(WIZARD_EYESCOLOR);
-    var chosenWizardEyes = WIZARD_EYESCOLOR[randomSelection(shuffleWizardEyes)];
-    evt.target.style.fill = chosenWizardEyes;
-
-    wizardEyesInput.value = chosenWizardEyes;
-  });
-};
-
-changeWizardEyes();
-
-//  Изменение цвета фаерболов по нажатию
-var changeFireballWap = function () {
-  var setupFireballWap = document.querySelector('.setup-fireball-wrap');
-  var fireballWapInput = setupFireballWap.querySelector('input');
-
-  setupFireballWap.addEventListener('click', function (evt) {
-    var shuffleWizardFireballWap = shuffle(WIZARD_FIREBALLCOLOR);
-    var chosenWizardFireballWap = WIZARD_FIREBALLCOLOR[randomSelection(shuffleWizardFireballWap)];
-    evt.target.style.backgroundColor = chosenWizardFireballWap;
-
-    fireballWapInput.value = chosenWizardFireballWap;
-  });
-};
-
-changeFireballWap();
+  validationName();
+})();
