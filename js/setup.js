@@ -1,37 +1,12 @@
 'use strict';
 (function () {
-  // Данные для предыдущих заданий
-  var userName = ['Иван', 'Хуан Себастьян', 'Мария', 'Кристоф', 'Виктор', 'Юлия', 'Люпита', 'Вашингтон'];
-  var userSurname = ['да Марья', 'Верон', 'Мирабелла', 'Вальц', 'Онопко', 'Топольницкая', 'Нионго', 'Ирвинг'];
   var LENGTH_WIZARDS_ARR = 4;
 
-  var setup = document.querySelector('.setup');
+  window.setup = document.querySelector('.setup');
+  window.setupClose = window.setup.querySelector('.setup-close');
 
-  //  Предыдущие задания
-  // Создает массив магов из объектов с данными
-  var arrWizards = function (myUserName, myUserSurname, myWizardCoatcolor, myWizardEyescolor, myLengthWizardsArr) {
-    var WIZARD_NAMES = [];
-    var wizards = [];
-
-    for (var i = 0; i < myLengthWizardsArr; i++) {
-      var shuffleuserName = window.util.shuffle(userName);
-      var chosenuserName = window.util.randomSelection(shuffleuserName);
-
-      var shuffleuserSurname = window.util.shuffle(userSurname);
-      var chosenuserSurname = window.util.randomSelection(shuffleuserSurname);
-      WIZARD_NAMES[i] = userName[chosenuserName] + ' ' + userSurname[chosenuserSurname];
-
-      var shuffleWizardCoatcolor = window.util.shuffle(myWizardCoatcolor);
-      var chosenWizardCoatcolor = myWizardCoatcolor[window.util.randomSelection(shuffleWizardCoatcolor)];
-
-      var shuffleWizardEyescolor = window.util.shuffle(myWizardEyescolor);
-      var chosenWizardEyescolor = myWizardEyescolor[window.util.randomSelection(shuffleWizardEyescolor)];
-
-      wizards[i] = {name: WIZARD_NAMES[i], coatColor: chosenWizardCoatcolor, eyesColor: chosenWizardEyescolor};
-    }
-
-    return (wizards);
-  };
+  var similarListElement = document.querySelector('.setup-similar-list');//  Аналогичные элементы списка
+  var form = window.setup.querySelector('.setup-wizard-form');
 
   //  функция создания DOM-элемента на основе JS-объекта
   var renderWizard = function (wizard) {
@@ -40,32 +15,59 @@
     var wizardElement = similarWizardTemplate.cloneNode(true);
 
     wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizard.coatColor;
+    wizardElement.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
     wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
 
     return wizardElement;
   };
 
-  //  функция заполнения блока DOM-элементами на основе массива JS-объектов
-  var fillingWizard = function () {
-    var wizards = arrWizards(userName, userSurname, window.util.WIZARD_COATCOLOR, window.util.WIZARD_EYESCOLOR, LENGTH_WIZARDS_ARR);
+  var showSetupSimilar = function () {
+    window.setup.querySelector('.setup-similar').classList.remove('hidden');
+  };
 
-    document.querySelector('.setup-similar').classList.remove('hidden');
-    var similarListElement = document.querySelector('.setup-similar-list');//  Аналогичные элементы списка
+  //  Заполняем блок DOM-элементами на основе массива JS-объектов
 
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), function () {
+      window.setup.classList.add('hidden');
+    }, errorHandler);
+    evt.preventDefault();
+  });
+
+  var successHandler = function (wizards) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < wizards.length; i++) {
+
+    for (var i = 0; i < LENGTH_WIZARDS_ARR; i++) {
       fragment.appendChild(renderWizard(wizards[i]));
     }
+
     similarListElement.appendChild(fragment);
+    window.setup.querySelector('.setup-similar').classList.remove('hidden');
+  };
+
+  var errorHandler = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  var init = function () {
+    window.backend.load(successHandler, errorHandler);
+    showSetupSimilar();
   };
 
   //  Открытие/закрытие окна настройки персонажа
-  fillingWizard();//  Вызов функции заполнения блока DOM-элементами на основе массива JS-объектов
   var characterWindowSetting = function () {
+    init();
+
     var setupOpen = document.querySelector('.setup-open');
-    var setupClose = setup.querySelector('.setup-close');
-    var userNameInput = setup.querySelector('.setup-user-name');
+    var userNameInput = window.setup.querySelector('.setup-user-name');
 
     var onPopupEscPress = function (evt) {
       if (evt.keyCode === window.util.ESC_KEYCODE) {
@@ -75,18 +77,19 @@
           openPopup();
         } else {
           closePopup();
+          window.onCloseDialog();
         }
       }
     };
 
     var openPopup = function () {
-      setup.classList.remove('hidden');
+      window.setup.classList.remove('hidden');
 
       document.addEventListener('keydown', onPopupEscPress);
     };
 
     var closePopup = function () {
-      setup.classList.add('hidden');
+      window.setup.classList.add('hidden');
 
       document.removeEventListener('keydown', onPopupEscPress);
     };
@@ -99,11 +102,11 @@
       window.util.isEnterEvent(evt, openPopup);
     });
 
-    setupClose.addEventListener('click', function () {
+    window.setupClose.addEventListener('click', function () {
       closePopup();
     });
 
-    setupClose.addEventListener('keydown', function (evt) {
+    window.setupClose.addEventListener('keydown', function (evt) {
       window.util.isEnterEvent(evt, closePopup);
     });
   };
@@ -112,7 +115,7 @@
 
   //  Валидация ввода имени персонажа
   var validationName = function () {
-    var userNameInput = setup.querySelector('.setup-user-name');
+    var userNameInput = window.setup.querySelector('.setup-user-name');
 
     userNameInput.addEventListener('invalid', function () {
       if (userNameInput.validity.tooShort) {

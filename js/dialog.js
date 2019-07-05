@@ -1,11 +1,8 @@
 'use strict';
 
 (function () {
-  var setupDialogElement = document.querySelector('.setup');
-  var dialogHandler = setupDialogElement.querySelector('.upload');
-
+  var dialogHandler = window.setup.querySelector('.upload');
   var submitElement = document.querySelector('.setup-submit');
-  var closeElement = document.querySelector('.setup-close');
 
   // Обработаем событие начала перетаскивания нашего диалога
   dialogHandler.addEventListener('mousedown', function (evt) {
@@ -33,8 +30,8 @@
         y: moveEvt.clientY
       };
 
-      setupDialogElement.style.top = (setupDialogElement.offsetTop - shift.y) + 'px';
-      setupDialogElement.style.left = (setupDialogElement.offsetLeft - shift.x) + 'px';
+      window.setup.style.top = (window.setup.offsetTop - shift.y) + 'px';
+      window.setup.style.left = (window.setup.offsetLeft - shift.x) + 'px';
     };
 
     // При отпускании кнопки мыши нужно переставать слушать события движения мыши
@@ -61,11 +58,11 @@
   });
 
   // При повторном открытии/закрытии диалога, положение диалога должно сбрасываться на изначальное
-  var onCloseDialog = function () {
-    setupDialogElement.style.top = null;
-    setupDialogElement.style.left = null;
+  window.onCloseDialog = function () {
+    window.setup.style.top = null;
+    window.setup.style.left = null;
   };
 
-  submitElement.addEventListener('click', onCloseDialog);
-  closeElement.addEventListener('click', onCloseDialog);
+  submitElement.addEventListener('click', window.onCloseDialog);
+  window.setupClose.addEventListener('click', window.onCloseDialog);
 })();

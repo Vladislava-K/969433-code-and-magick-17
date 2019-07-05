@@ -29,8 +29,8 @@
   };
 
   window.renderStatistics = function (ctx, players, times) {
-    renderCloud(CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
-    renderCloud(CLOUD_X, CLOUD_Y, '#fff');
+    renderCloud(ctx, CLOUD_X + GAP, CLOUD_Y + GAP, 'rgba(0, 0, 0, 0.7)');
+    renderCloud(ctx, CLOUD_X, CLOUD_Y, '#fff');
 
     ctx.fillStyle = '#000';
     ctx.font = '16px PT Mono';
