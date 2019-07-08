@@ -25,8 +25,6 @@
     window.setup.querySelector('.setup-similar').classList.remove('hidden');
   };
 
-  //  Заполняем блок DOM-элементами на основе массива JS-объектов
-
   form.addEventListener('submit', function (evt) {
     window.backend.save(new FormData(form), function () {
       window.setup.classList.add('hidden');
@@ -34,12 +32,20 @@
     evt.preventDefault();
   });
 
+  //  Заполняем блок DOM-элементами на основе массива JS-объектов
   var successHandler = function (wizards) {
     var fragment = document.createDocumentFragment();
 
+    /*
     for (var i = 0; i < LENGTH_WIZARDS_ARR; i++) {
       fragment.appendChild(renderWizard(wizards[i]));
     }
+    */
+
+    var newWizards = wizards.slice(0, LENGTH_WIZARDS_ARR);
+    newWizards.forEach(function (itemNewWizard) {
+      fragment.appendChild(renderWizard(itemNewWizard));
+    });
 
     similarListElement.appendChild(fragment);
     window.setup.querySelector('.setup-similar').classList.remove('hidden');
