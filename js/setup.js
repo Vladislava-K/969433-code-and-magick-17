@@ -1,55 +1,9 @@
 'use strict';
 (function () {
-  var LENGTH_WIZARDS_ARR = 4;
+  var setupd = document.querySelector('.setup');
+  window.setupClose = setupd.querySelector('.setup-close');
 
-  window.setup = document.querySelector('.setup');
-  window.setupClose = window.setup.querySelector('.setup-close');
-
-  var similarListElement = document.querySelector('.setup-similar-list');//  Аналогичные элементы списка
-  var form = window.setup.querySelector('.setup-wizard-form');
-
-  //  функция создания DOM-элемента на основе JS-объекта
-  var renderWizard = function (wizard) {
-    var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');//  Итоговую разметку .setup-similar-item берем из шаблона #similar-wizard-template
-
-    var wizardElement = similarWizardTemplate.cloneNode(true);
-
-    wizardElement.querySelector('.setup-similar-label').textContent = wizard.name;
-    wizardElement.querySelector('.wizard-coat').style.fill = wizard.colorCoat;
-    wizardElement.querySelector('.wizard-eyes').style.fill = wizard.eyesColor;
-
-    return wizardElement;
-  };
-
-  var showSetupSimilar = function () {
-    window.setup.querySelector('.setup-similar').classList.remove('hidden');
-  };
-
-  form.addEventListener('submit', function (evt) {
-    window.backend.save(new FormData(form), function () {
-      window.setup.classList.add('hidden');
-    }, errorHandler);
-    evt.preventDefault();
-  });
-
-  //  Заполняем блок DOM-элементами на основе массива JS-объектов
-  var successHandler = function (wizards) {
-    var fragment = document.createDocumentFragment();
-
-    /*
-    for (var i = 0; i < LENGTH_WIZARDS_ARR; i++) {
-      fragment.appendChild(renderWizard(wizards[i]));
-    }
-    */
-
-    var newWizards = wizards.slice(0, LENGTH_WIZARDS_ARR);
-    newWizards.forEach(function (itemNewWizard) {
-      fragment.appendChild(renderWizard(itemNewWizard));
-    });
-
-    similarListElement.appendChild(fragment);
-    window.setup.querySelector('.setup-similar').classList.remove('hidden');
-  };
+  var form = setupd.querySelector('.setup-wizard-form');
 
   var errorHandler = function (errorMessage) {
     var node = document.createElement('div');
@@ -63,40 +17,39 @@
     document.body.insertAdjacentElement('afterbegin', node);
   };
 
+  form.addEventListener('submit', function (evt) {
+    window.backend.save(new FormData(form), function () {
+      setupd.classList.add('hidden');
+    }, errorHandler);
+    evt.preventDefault();
+  });
+
   var init = function () {
-    window.backend.load(successHandler, errorHandler);
-    showSetupSimilar();
+    window.backend.load(window.successHandler, errorHandler);
   };
 
   //  Открытие/закрытие окна настройки персонажа
   var characterWindowSetting = function () {
-    init();
-
     var setupOpen = document.querySelector('.setup-open');
-    var userNameInput = window.setup.querySelector('.setup-user-name');
+    var userNameInput = setupd.querySelector('.setup-user-name');
 
     var onPopupEscPress = function (evt) {
-      if (evt.keyCode === window.util.ESC_KEYCODE) {
-        var target = evt.target;
-        if (target === userNameInput) {
-          document.removeEventListener('keydown', onPopupEscPress);
-          openPopup();
-        } else {
-          closePopup();
-          window.onCloseDialog();
-        }
+      if (evt.keyCode === window.util.ESC_KEYCODE && userNameInput !== document.activeElement) {
+        closePopup();
+        window.onCloseDialog();
       }
     };
 
     var openPopup = function () {
-      window.setup.classList.remove('hidden');
+      init();
+
+      setupd.classList.remove('hidden');
 
       document.addEventListener('keydown', onPopupEscPress);
     };
 
     var closePopup = function () {
-      window.setup.classList.add('hidden');
-
+      setupd.classList.add('hidden');
       document.removeEventListener('keydown', onPopupEscPress);
     };
 
@@ -113,7 +66,10 @@
     });
 
     window.setupClose.addEventListener('keydown', function (evt) {
-      window.util.isEnterEvent(evt, closePopup);
+      window.util.isEnterEvent(evt, function () {
+        closePopup();
+        window.onCloseDialog();
+      });
     });
   };
 
@@ -121,7 +77,7 @@
 
   //  Валидация ввода имени персонажа
   var validationName = function () {
-    var userNameInput = window.setup.querySelector('.setup-user-name');
+    var userNameInput = setupd.querySelector('.setup-user-name');
 
     userNameInput.addEventListener('invalid', function () {
       if (userNameInput.validity.tooShort) {
@@ -140,4 +96,9 @@
   };
 
   validationName();
+
+  window.setup = {
+    setupd: setupd,
+    errorHandler: errorHandler
+  };
 })();

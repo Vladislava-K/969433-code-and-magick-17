@@ -1,52 +1,33 @@
 'use strict';
 
 (function () {
-  //  Изменение цвета мантии персонажа по нажатию
-  var changeWizardCoat = function () {
-    var setupWizardCoat = document.querySelector('.setup-wizard').querySelector('.wizard-coat');
-    var wizardCoatInput = document.querySelector('.setup-wizard-appearance').querySelectorAll('input')[0];
+  window.wizards = [];
 
-    setupWizardCoat.addEventListener('click', function (evt) {
-      var shuffleWizardCoat = window.util.shuffle(window.util.WIZARD_COATCOLOR);
-      var chosenWizardCoat = window.util.WIZARD_COATCOLOR[window.util.randomSelection(shuffleWizardCoat)];
-      evt.target.style.fill = chosenWizardCoat;
+  var getRank = function (wizard) {
+    var rank = 0;
 
-      wizardCoatInput.value = chosenWizardCoat;
-    });
+    if (wizard.colorCoat === window.coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === window.eyesColor) {
+      rank += 1;
+    }
+
+    return rank;
   };
 
-  changeWizardCoat();
-
-  //  Изменение цвета глаз персонажа по нажатию
-  var changeWizardEyes = function () {
-    var setupWizardEyes = document.querySelector('.setup-wizard').querySelector('.wizard-eyes');
-    var wizardEyesInput = document.querySelector('.setup-wizard-appearance').querySelectorAll('input')[1];
-
-    setupWizardEyes.addEventListener('click', function (evt) {
-      var shuffleWizardEyes = window.util.shuffle(window.util.WIZARD_EYESCOLOR);
-      var chosenWizardEyes = window.util.WIZARD_EYESCOLOR[window.util.randomSelection(shuffleWizardEyes)];
-      evt.target.style.fill = chosenWizardEyes;
-
-      wizardEyesInput.value = chosenWizardEyes;
-    });
+  window.updateWizards = function () {
+    window.renders(window.wizards.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = window.wizards.indexOf(left) - window.wizards.indexOf(right);
+      }
+      return rankDiff;
+    }));
   };
 
-  changeWizardEyes();
-
-  //  Изменение цвета фаерболов по нажатию
-  var changeFireballWap = function () {
-    var setupFireballWap = document.querySelector('.setup-fireball-wrap');
-    var fireballWapInput = setupFireballWap.querySelector('input');
-
-    setupFireballWap.addEventListener('click', function (evt) {
-      var shuffleWizardFireballWap = window.util.shuffle(window.util.WIZARD_FIREBALLCOLOR);
-      var chosenWizardFireballWap = window.util.WIZARD_FIREBALLCOLOR[window.util.randomSelection(shuffleWizardFireballWap)];
-      evt.target.style.backgroundColor = chosenWizardFireballWap;
-
-      fireballWapInput.value = chosenWizardFireballWap;
-    });
+  window.successHandler = function (data) {
+    window.wizards = data;
+    window.updateWizards();
   };
-
-  changeFireballWap();
-
 })();
